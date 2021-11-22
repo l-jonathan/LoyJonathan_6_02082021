@@ -1,22 +1,28 @@
 //Package file system pour modifier le système de donnée pour la fonction delete
 const fs = require('fs');
 
+
 //Import du modele de la sauce
 const Sauce = require('../models/sauce');
 
 //Création d'une sauce
 exports.createSauce = (req, res, next) => {
+  console.log('je suis ici');
   const sauceObject = JSON.parse(req.body.sauce);
   delete sauceObject._id;
   const sauce = new Sauce({
     ...sauceObject,
-    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+    likes: 0,
+    dislikes: 0,
+    usersLiked: [],
+    usersDisliked: []
   });
+  console.log('je suis là');
   sauce.save()
     .then(() => res.status(201).json({ message: 'Sauce enregistré !'}))
     .catch(error => res.status(400).json({ error }));
 };
-
 
 //Modification d'une sauce
 exports.modifySauce = (req, res, next) => {
